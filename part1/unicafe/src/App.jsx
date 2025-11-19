@@ -9,6 +9,7 @@ const Header = (props) => {
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
 const Statistics = ({ good, neutral, bad, all, avg, positive }) => {
+  if (all === 0) return <div><p>No feedback given</p></div>
   return (
     <div>
       <Header text="Statistics" />
