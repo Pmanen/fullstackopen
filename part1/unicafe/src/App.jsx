@@ -8,17 +8,22 @@ const Header = (props) => {
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
+const StatisticLine = ( {text, value} ) => {
+  if (text === "positive") return <p>{text} {value} %</p>
+  return <p>{text} {value}</p>
+}
+
 const Statistics = ({ good, neutral, bad, all, avg, positive }) => {
   if (all === 0) return <div><p>No feedback given</p></div>
   return (
     <div>
       <Header text="Statistics" />
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {avg}</p>
-      <p>positive {positive} %</p>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={all} />
+      <StatisticLine text="average" value={avg} />
+      <StatisticLine text="positive" value={positive} />
     </div>
   )
 }
