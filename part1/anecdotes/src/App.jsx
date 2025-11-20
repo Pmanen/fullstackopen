@@ -21,18 +21,27 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(Math.floor(Math.random() * anecdotes.length))
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   const refreshAnecdote = () => () => {
     const pick = Math.floor(Math.random() * anecdotes.length)
     setSelected(pick)
   }
 
+  const vote = (active) => () => {
+    const newVotes = [...votes]
+    newVotes[active] += 1
+    setVotes(newVotes)
+  }
+
   return (
     <div>
       <div>
-        {anecdotes[selected]}
+        <p>{anecdotes[selected]}</p>
+        <p>has {votes[selected]} votes</p>
       </div>
       <div>
+        <Button onClick={vote(selected)} text="vote" />
         <Button onClick={refreshAnecdote()} text="next anecdote" />
       </div>
     </div>
