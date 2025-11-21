@@ -22,6 +22,7 @@ const App = () => {
    
   const [selected, setSelected] = useState(Math.floor(Math.random() * anecdotes.length))
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
+  const [mostVotes, setMostVotes] = useState([0,0]) // [index, voteCount]
 
   const refreshAnecdote = () => () => {
     const pick = Math.floor(Math.random() * anecdotes.length)
@@ -31,18 +32,28 @@ const App = () => {
   const vote = (active) => () => {
     const newVotes = [...votes]
     newVotes[active] += 1
+    if (newVotes[active] > mostVotes[1]) {
+      const newMost = [active, newVotes[active]]
+      setMostVotes(newMost)
+    }
     setVotes(newVotes)
   }
 
   return (
     <div>
       <div>
+        <Header text="Anecdote of the day" />
         <p>{anecdotes[selected]}</p>
         <p>has {votes[selected]} votes</p>
       </div>
       <div>
         <Button onClick={vote(selected)} text="vote" />
         <Button onClick={refreshAnecdote()} text="next anecdote" />
+      </div>
+      <div>
+        <Header text="Anecdote with most votes" />
+        <p>{anecdotes[mostVotes[0]]}</p>
+        <p>has {mostVotes[1]} votes</p>
       </div>
     </div>
   )
