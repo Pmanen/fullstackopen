@@ -3,13 +3,11 @@ const Course = ({ course }) => {
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
-{/*       <Total
+      <Total
         total={
-          course.parts[0].exercises +
-          course.parts[1].exercises +
-          course.parts[2].exercises
+          course.parts.map(part => part.exercises).reduce((sum, num) => sum + num, 0)
         }
-      /> */}
+      />
     </div>
   )
 }
