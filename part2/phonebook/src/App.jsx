@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -9,6 +10,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [activeFilter, setActiveFilter] = useState('')
   const [filterIsEmpty, setFilterIsEmpty] = useState(true)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
       personService.getAll().then((initialPersons) => {
@@ -30,6 +32,12 @@ const App = () => {
             setPersons(persons.map((p) => (p.id !== returnedPerson.id ? p : returnedPerson)))
             setNewName('')
             setNewNumber('')
+            setSuccessMessage(
+              `${returnedPerson.name}'s new number successfully recorded.`
+            )
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
           })
           .catch((error) => {
             alert("Error: person does not exist in database.")
@@ -45,6 +53,12 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setSuccessMessage(
+              `${returnedPerson.name}'s number added to phonebook.`
+            )
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
       })
     }
   }
@@ -81,6 +95,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={successMessage} />
       <div>
         <h2>Phonebook</h2>
         <div>filter shown with <input value={activeFilter} onChange={handleFilterChange}/></div>
