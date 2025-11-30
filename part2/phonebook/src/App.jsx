@@ -19,8 +19,26 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     const newPerson = { name: newName, number: newNumber }
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const existingPerson = persons.find(person => person.name === newName)
+    if (existingPerson) {
+      if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with the new one?`)) {
+        const changedPerson = {...existingPerson, number: newPerson.number}
+
+        personService
+          .update(existingPerson.id, changedPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.map((p) => (p.id !== returnedPerson.id ? p : returnedPerson)))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch((error) => {
+            alert("Error: person does not exist in database.")
+          })
+      }
+      else {
+        setNewName('')
+        setNewNumber('')
+      }
     }
     else {
       personService.create(newPerson).then((returnedPerson) => {
@@ -52,7 +70,7 @@ const App = () => {
           setPersons(persons.filter((p) => (p.id !== returnedData.id)))
         })
         .catch((error) => {
-          alert('error 404')
+          alert('Error: person is already deleted.')
           setPersons(persons.filter((p) => (p.id !== person.id)))
         })
       }
