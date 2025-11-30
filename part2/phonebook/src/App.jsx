@@ -44,6 +44,20 @@ const App = () => {
     setFilterIsEmpty((event.target.value === ""))
   }
 
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)){
+      personService
+        .deleteAction(person.id)
+        .then((returnedData) => {
+          setPersons(persons.filter((p) => (p.id !== returnedData.id)))
+        })
+        .catch((error) => {
+          alert('error 404')
+          setPersons(persons.filter((p) => (p.id !== person.id)))
+        })
+      }
+  }
+
   const numbersFiltered = filterIsEmpty ? persons : 
     persons.filter((person) => person.name.toLowerCase().includes(activeFilter.toLowerCase()))
 
@@ -64,9 +78,7 @@ const App = () => {
         />
       </div>
       <h2>Numbers</h2>
-      <div>
-        <Persons persons={numbersFiltered} />
-      </div>
+      <Persons persons={numbersFiltered} deleteHandler={deletePerson} />
     </div>
   )
 }
