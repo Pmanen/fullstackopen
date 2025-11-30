@@ -11,6 +11,7 @@ const App = () => {
   const [activeFilter, setActiveFilter] = useState('')
   const [filterIsEmpty, setFilterIsEmpty] = useState(true)
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
       personService.getAll().then((initialPersons) => {
@@ -40,7 +41,14 @@ const App = () => {
             }, 5000)
           })
           .catch((error) => {
-            alert("Error: person does not exist in database.")
+            setErrorMessage(
+              `Error: ${changedPerson.name} does not exist in database.`
+            )
+            setNewName('')
+            setNewNumber('')
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
       }
       else {
@@ -56,9 +64,9 @@ const App = () => {
         setSuccessMessage(
               `${returnedPerson.name}'s number added to phonebook.`
             )
-            setTimeout(() => {
-              setSuccessMessage(null)
-            }, 5000)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       })
     }
   }
@@ -84,7 +92,12 @@ const App = () => {
           setPersons(persons.filter((p) => (p.id !== returnedData.id)))
         })
         .catch((error) => {
-          alert('Error: person is already deleted.')
+          setErrorMessage(
+            `Error: ${person.name} does not exist in database.`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
           setPersons(persons.filter((p) => (p.id !== person.id)))
         })
       }
@@ -95,7 +108,8 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={successMessage} />
+      <Notification message={successMessage} type={"success"} />
+      <Notification message={errorMessage} type={"error"} />
       <div>
         <h2>Phonebook</h2>
         <div>filter shown with <input value={activeFilter} onChange={handleFilterChange}/></div>
