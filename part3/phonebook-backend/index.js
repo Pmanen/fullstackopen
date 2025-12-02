@@ -70,6 +70,12 @@ app.post('/api/persons', (request, response) => {
         })
     }
 
+    if (persons.some(person => person.name === body.name)) {
+        return response.status(400).json({
+            error: 'name already in use'
+        })
+    }
+
     const person = {
         name: body.name,
         number: body.number,
