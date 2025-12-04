@@ -116,6 +116,7 @@ const App = () => {
       </div>
       <div>
         <h2>add a new</h2>
+        <p style={{color: 'magenta'}}>This message is to test the build script.</p>
         <PersonForm 
           add={addPerson} 
           name={newName} 
