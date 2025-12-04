@@ -1,6 +1,25 @@
+require('dotenv').config ()
 const express = require('express')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
 const app = express()
+
+mongoose.set('strictQuery', false)
+const url = process.env.MONGODB_URI
+mongoose.connect(url, { family: 4 })
+  .then(result => {
+    console.log('connected to MongoDB')
+  })
+  .catch(error => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
+})
+
+const Person = mongoose.model('Person', personSchema)
 
 app.use(express.json())
 app.use(express.static('dist'))
@@ -37,7 +56,9 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find ({}).then(result => {
+        response.json(result)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
