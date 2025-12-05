@@ -19,6 +19,21 @@ const App = () => {
     })
   }, []) 
 
+  const tempNotification = (message, type) => {
+    if (type === "success") {
+      setSuccessMessage(message)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+    }
+    else if (type === "error") {
+      setErrorMessage(message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     const newPerson = { name: newName, number: newNumber }
@@ -33,22 +48,10 @@ const App = () => {
             setPersons(persons.map((p) => (p.id !== returnedPerson.id ? p : returnedPerson)))
             setNewName('')
             setNewNumber('')
-            setSuccessMessage(
-              `${returnedPerson.name}'s new number successfully recorded.`
-            )
-            setTimeout(() => {
-              setSuccessMessage(null)
-            }, 5000)
+            tempNotification(`${returnedPerson.name}'s new number successfully recorded.`, "success")
           })
           .catch((error) => {
-            setErrorMessage(
-              `Error: ${changedPerson.name} does not exist in database.`
-            )
-            setNewName('')
-            setNewNumber('')
-            setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
+            tempNotification(error.response.data.error, "error")
           })
       }
       else {
@@ -57,17 +60,17 @@ const App = () => {
       }
     }
     else {
-      personService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        setSuccessMessage(
-              `${returnedPerson.name}'s number added to phonebook.`
-            )
-        setTimeout(() => {
-          setSuccessMessage(null)
-        }, 5000)
-      })
+      personService
+        .create(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          tempNotification(`${returnedPerson.name}'s number added to phonebook.`, "success")
+        })
+        .catch(error => {
+          tempNotification(error.response.data.error, "error")
+       }) 
     }
   }
 
@@ -92,12 +95,7 @@ const App = () => {
           setPersons(persons.filter((p) => (p.id !== returnedData.id)))
         })
         .catch((error) => {
-          setErrorMessage(
-            `Error: ${person.name} does not exist in database.`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
+          tempNotification(`Error: ${person.name} does not exist in database.`, "error")
           setPersons(persons.filter((p) => (p.id !== person.id)))
         })
       }
@@ -116,7 +114,6 @@ const App = () => {
       </div>
       <div>
         <h2>add a new</h2>
-        <p style={{color: 'magenta'}}>This message is to test the build script.</p>
         <PersonForm 
           add={addPerson} 
           name={newName} 
