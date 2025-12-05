@@ -31,10 +31,12 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
-        <p>${new Date()}</p>
-    `)
+    Person.countDocuments({}).then(count => {
+        response.send(`
+            <p>Phonebook has info for ${count} people</p>
+            <p>${new Date()}</p>
+        `)  
+    })
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
