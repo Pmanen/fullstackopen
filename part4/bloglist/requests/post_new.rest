@@ -1,0 +1,12 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "Mike Google",
+    "title": "The Search Engine",
+    "url": "https://www.google.com/blog",
+    "likes": 0
+}  
+
+###
+GET http://localhost:3003/api/blogs
