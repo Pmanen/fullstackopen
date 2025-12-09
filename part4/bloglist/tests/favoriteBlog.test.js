@@ -82,11 +82,11 @@ describe('favourite blog', () => {
 
   test('when list has three blogs and [0] is max value, equals [0]', () => {
     const result = listHelper.favoriteBlog(listWithThreeBlogDescending)
-    assert.deepStrictEqual(result, listWithOneBlog[0])
+    assert.deepStrictEqual(result, listWithThreeBlogDescending[0])
   })
 
   test('when list has three blogs and second one is max value, equals [1]', () => {
     const result = listHelper.favoriteBlog(listWithThreeBlogAscending)
-    assert.deepStrictEqual(result, listWithOneBlog[1])
+    assert.deepStrictEqual(result, listWithThreeBlogAscending[1])
   })
 })
