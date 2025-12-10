@@ -4,6 +4,15 @@ Content-Type: application/json
 {
     "author": "Mike Google 2",
     "title": "The Search Engine 2",
+    "url": "https://www.google.com/blog"
+}  
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "Mike Google 2",
     "url": "https://www.google.com/blog",
     "likes": 1
 }  

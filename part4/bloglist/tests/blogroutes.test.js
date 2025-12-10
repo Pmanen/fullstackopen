@@ -59,7 +59,27 @@ describe('post', () => {
 
     // const newDatabase = await blogsInDb()
     // const blogInDb = newDatabase.find(blog => blog.id === response.body.id)
-    assert(response.body.likes)
+
+    assert.strictEqual(response.body.likes, 0)
+  })
+
+  test.only('blog without title or url is rejected', async () => {
+    const newBlog = {
+      author: 'Benny B',
+      url: '4902348.eu',
+      likes: 4
+    }
+
+    const newBlog2 = {
+      title: 'Exercise is great',
+      author: 'Benny B',
+      likes: 4
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
   })
 })
 
