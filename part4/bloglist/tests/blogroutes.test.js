@@ -5,7 +5,9 @@ const app = require('../app')
 const helper = require('./test_helper')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
-const { initialBlogs, blogsInDb } = require('./test_helper')
+const { initialBlogs, blogsInDb,  } = require('./test_helper')
+const { nonExistingId } = require('./test_helper')
+const blog = require('../models/blog')
 
 const api = supertest(app)
 
@@ -89,7 +91,7 @@ describe('post', () => {
 })
 
 describe('delete', () => {
-  test.only('post gets succesfully deleted', async () => {
+  test('post gets succesfully deleted', async () => {
     const blogsAtStart = await blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -103,6 +105,44 @@ describe('delete', () => {
     assert(!ids.includes(blogToDelete.id))
 
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)    
+  })
+})
+
+describe('put', () => {
+  test.only('unknown post returns 404', async () => {
+    const nonId = await nonExistingId()
+
+    const newBlog = {
+      author: 'Benny B',
+      url: '4902348.eu',
+      likes: 4
+    }
+
+    await api
+      .put(`/api/blogs/${nonId}`)
+      .send(newBlog)
+      .expect(404)
+  })
+
+  test.only('valid edit works', async () => {
+    const blogsAtStart = await blogsInDb()
+    const blogToEdit = blogsAtStart[0]
+
+    const newBlog = {
+      author: blogToEdit.author,
+      url: blogToEdit.url,
+      title: blogToEdit.title,
+      likes: blogToEdit.likes + 1
+    }
+
+    const response = await api
+      .put(`/api/blogs/${blogToEdit.id}`)
+      .send(newBlog)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+    assert.strictEqual(response.body.likes, newBlog.likes)
   })
 })
 

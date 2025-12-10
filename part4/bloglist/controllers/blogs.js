@@ -19,6 +19,23 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204).end()
 })
 
+blogsRouter.put('/:id', async (request, response) => {
+  const { title, author, url, likes } = request.body
+
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    response.status(404).end()
+  }
+  
+  blog.title = title
+  blog.author = author
+  blog.url = url
+  blog.likes = likes
+
+  const savedBlog = await blog.save()
+  response.json(savedBlog)
+})
+
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
