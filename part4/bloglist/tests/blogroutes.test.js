@@ -14,10 +14,16 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs) 
 })
 
-test.only('get returns correct # blogs in json format', async () => {
+test('get returns correct # blogs in json format', async () => {
   const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
 
   assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
+test.only('returned id property is named id and not _id', async () => {
+  const response = await api.get('/api/blogs')
+
+  assert(response.body[0].id && !(response.body[0]._id))
 })
 
 after(async () => {
