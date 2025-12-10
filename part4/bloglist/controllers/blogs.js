@@ -14,6 +14,11 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
+})
+
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 

@@ -27,7 +27,7 @@ test.only('returned id property is named id and not _id', async () => {
 })
 
 describe('post', () => {
-  test.only('a valid blog can be added', async () => {
+  test('a valid blog can be added', async () => {
     const newBlog = {
       title: 'Exercise is good',
       author: 'Allison Jerk',
@@ -46,7 +46,7 @@ describe('post', () => {
     assert.strictEqual(response.body.title, newBlog.title)
   })
 
-  test.only('likes property defaults to 0', async () => {
+  test('likes property defaults to 0', async () => {
     const newBlog = {
       title: 'Exercise is bood',
       author: 'Bllison Jrk',
@@ -63,7 +63,7 @@ describe('post', () => {
     assert.strictEqual(response.body.likes, 0)
   })
 
-  test.only('blog without title or url is rejected', async () => {
+  test('blog without title or url is rejected', async () => {
     const newBlog = {
       author: 'Benny B',
       url: '4902348.eu',
@@ -80,6 +80,29 @@ describe('post', () => {
       .post('/api/blogs')
       .send(newBlog)
       .expect(400)
+    
+    await api
+      .post('/api/blogs')
+      .send(newBlog2)
+      .expect(400)
+  })
+})
+
+describe('delete', () => {
+  test.only('post gets succesfully deleted', async () => {
+    const blogsAtStart = await blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api 
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await blogsInDb()
+
+    const ids = blogsAtEnd.map(n => n.id)
+    assert(!ids.includes(blogToDelete.id))
+
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)    
   })
 })
 

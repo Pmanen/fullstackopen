@@ -1,0 +1,14 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "author": "Chris Clear",
+    "title": "How to Delete a Post",
+    "url": "https://www.google.com/blog"
+}  
+
+###
+GET http://localhost:3003/api/blogs
+
+###
+DELETE http://localhost:3003/api/blogs/6939f104d9381f2fcba1f6fa
