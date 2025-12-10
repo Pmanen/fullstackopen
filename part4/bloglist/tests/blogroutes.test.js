@@ -45,6 +45,22 @@ describe('post', () => {
     assert.strictEqual(newDatabase.length, initialBlogs.length + 1)
     assert.strictEqual(response.body.title, newBlog.title)
   })
+
+  test.only('likes property defaults to 0', async () => {
+    const newBlog = {
+      title: 'Exercise is bood',
+      author: 'Bllison Jrk',
+      url: 'https://exercise.io',
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+
+    // const newDatabase = await blogsInDb()
+    // const blogInDb = newDatabase.find(blog => blog.id === response.body.id)
+    assert(response.body.likes)
+  })
 })
 
 after(async () => {
