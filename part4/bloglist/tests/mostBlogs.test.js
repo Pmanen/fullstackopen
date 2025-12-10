@@ -64,7 +64,7 @@ describe('most blogs', () => {
       title: 'Design Patterns',
       author: 'Gang of Four',
       url: 'https://example.com/design-patterns.pdf',
-      likes: 20,
+      likes: 18,
       __v: 0
     },
     {
