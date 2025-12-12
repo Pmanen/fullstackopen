@@ -9,9 +9,11 @@ Content-Type: application/json
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InBpcHBhIiwiaWQiOiI2OTNhY2FlMGNmMDkxYmFmMzVhM2E1NzUiLCJpYXQiOjE3NjU0NjE1ODd9.ncgdNfqEV2-0pyc_YNKu4CU8Pw9I7axOx5TvmJPTnKo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN0dWFydDkxIiwiaWQiOiI2OTNjNjkxYWJmNGY3ZDk1MTYzNDI3OTIiLCJpYXQiOjE3NjU1Njc2NTZ9.WlA49RAgelL2zL7GfmPENheyob9cKVvdeh26k35-ONI
 
 {
-  "content": "token auth whoo",
-  "important": false
+  "title": "token auth whoo",
+  "author": "Faeryn",
+  "likes": 1,
+  "url": "hhtjhu.eu"
 }
