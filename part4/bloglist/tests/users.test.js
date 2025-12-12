@@ -14,7 +14,7 @@ beforeEach(async () => {
 })
 
 describe('ex 4.16 user and password validation', () => {
-  test.only('creation fails with error 400 when given insuitable username', async () => {
+  test('creation fails with error 400 when given insuitable username', async () => {
     const newUser = {
       username: 'ro',
       name: 'Superuser',
@@ -27,7 +27,7 @@ describe('ex 4.16 user and password validation', () => {
       .expect(400)
   })
 
-  test.only('no duplicate usernames!', async () => {
+  test('no duplicate usernames!', async () => {
     const usersAtStart = await usersInDb()
     const newUser = {
       username: 'duplicate',
@@ -48,7 +48,7 @@ describe('ex 4.16 user and password validation', () => {
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
   })
 
-  test.only('no invalid passwords!', async () => {
+  test('no invalid passwords!', async () => {
     const usersAtStart = await usersInDb()
     const newUser = {
       username: 'duplicate',

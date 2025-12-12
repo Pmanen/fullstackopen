@@ -5,14 +5,15 @@ const app = require('../app')
 const helper = require('./test_helper')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
-const { initialBlogs, blogsInDb,  } = require('./test_helper')
+const User = require('../models/user')
+const { initialBlogs, blogsInDb, getLoggedInUser} = require('./test_helper')
 const { nonExistingId } = require('./test_helper')
-const blog = require('../models/blog')
 
 const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
   await Blog.insertMany(helper.initialBlogs) 
 })
 
@@ -30,6 +31,7 @@ test('returned id property is named id and not _id', async () => {
 
 describe('post', () => {
   test('a valid blog can be added', async () => {
+    const { logInUser, token } = await getLoggedInUser(api)
     const newBlog = {
       title: 'Exercise is good',
       author: 'Allison Jerk',
@@ -39,6 +41,7 @@ describe('post', () => {
 
    const response = await api
       .post('/api/blogs')
+      .set({ 'Authorization': `Bearer ${token}` })
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -49,6 +52,7 @@ describe('post', () => {
   })
 
   test('likes property defaults to 0', async () => {
+    const { logInUser, token } = await getLoggedInUser(api)
     const newBlog = {
       title: 'Exercise is bood',
       author: 'Bllison Jrk',
@@ -57,6 +61,7 @@ describe('post', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set({ 'Authorization': `Bearer ${token}` })
       .send(newBlog)
 
     // const newDatabase = await blogsInDb()
@@ -88,23 +93,53 @@ describe('post', () => {
       .send(newBlog2)
       .expect(400)
   })
+
+  test.only('blog without valid token is rejected', async () => {
+    const newBlog = {
+      title: 'Exercise is good',
+      author: 'Allison Jerk',
+      url: 'https://home.page',
+      likes: 0
+    }
+
+   const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  })
 })
 
 describe('delete', () => {
-  test('post gets succesfully deleted', async () => {
+  test.only('post gets succesfully deleted', async () => {
     const blogsAtStart = await blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const { logInUser, token } = await getLoggedInUser(api)
+
+    const newBlog = {
+      title: 'Exercise is good',
+      author: 'Allison Jerk',
+      url: 'https://home.page',
+      likes: 0
+    }
+
+   const response = await api
+      .post('/api/blogs')
+      .set({ 'Authorization': `Bearer ${token}` })
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
 
     await api 
-      .delete(`/api/blogs/${blogToDelete.id}`)
+      .delete(`/api/blogs/${response.body.id}`)
+      .set({ 'Authorization': `Bearer ${token}` })
       .expect(204)
 
     const blogsAtEnd = await blogsInDb()
 
     const ids = blogsAtEnd.map(n => n.id)
-    assert(!ids.includes(blogToDelete.id))
+    assert(!ids.includes(response.body.id))
 
-    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)    
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)    
   })
 })
 

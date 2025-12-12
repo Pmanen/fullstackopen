@@ -12,10 +12,10 @@ blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body)
   blog.likes = request.body.likes || 0
 
-  const user = request.user
-  if (!user) {
-    return response.status(400).json({ error: 'userId missing or not valid' })
+  if (!request.token) {
+    return response.status(401).json({ error: 'token missing' })
   }
+  const user = request.user
 
   blog.user = user._id
 
@@ -28,8 +28,8 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user
-  if (!user) {
-    return response.status(400).json({ error: 'userId missing or not valid' })
+  if (!request.token) {
+    return response.status(401).json({ error: 'token missing' })
   }
   const blogToDelete = await Blog.findById(request.params.id)
   if (!blogToDelete) {

@@ -54,6 +54,27 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const getLoggedInUser = async ( api ) => {
+  const newUser = {
+    username: 'alicetest',
+    name: 'Alice',
+    password: '1234'
+  }
+
+  const savedUser = await api
+    .post('/api/users')
+    .send(newUser)
+
+  const login = await api
+    .post('/api/login')
+    .send({ username: newUser.username, password: newUser.password })
+  
+  const token = login.body.token
+  const username = login.body.username
+
+  return { username, token }
+}
+
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb, usersInDb
+  initialBlogs, nonExistingId, blogsInDb, usersInDb, getLoggedInUser,
 }
