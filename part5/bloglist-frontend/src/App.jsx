@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,6 +30,21 @@ const App = () => {
     }
   }, [])
 
+  const tempNotification = (message, type) => {
+    if (type === "success") {
+      setSuccessMessage(message)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 4000)
+    }
+    else if (type === "error") {
+      setErrorMessage(message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 4000)
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     
@@ -39,8 +57,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      tempNotification('Logged in', 'success')
     } catch {
-      console.log('wrong credentials')
+      tempNotification('Login failed: wrong credentials', 'error')
     }
   }
 
@@ -58,17 +77,17 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      tempNotification(`Added a new blog: ${response.title} by ${response.author}.`, 'success')
     } catch {
-      console.log('invalid blog')
+      tempNotification('Invalid blog.', 'error')
     }
-
-    console.log('create')
   }
 
   const logout = (event) => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
     setUser(null)
+    tempNotification('Logged out.', 'success')
   }
 
   const loginForm = () => (
@@ -127,6 +146,8 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={successMessage} type={"success"} />
+      <Notification message={errorMessage} type={"error"} />
       {user ? <p>{user.name} is logged in <button onClick={() => logout()}>logout</button></p> : loginForm()}
       {user && createForm()}
       {user && blogList()}
