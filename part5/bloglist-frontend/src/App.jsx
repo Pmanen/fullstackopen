@@ -66,7 +66,7 @@ const App = () => {
   const createBlog = async (blogObject) => {
     try {
       const response = await blogService.create(blogObject)
-      setBlogs(blogs.concat(response))
+      setBlogs(blogs.concat({ ...response, user: user }))
       createFormRef.current.toggleVisibility()
       tempNotification(`Added a new blog: ${response.title} by ${response.author}.`, 'success')
     } catch {
@@ -99,13 +99,31 @@ const App = () => {
     </form>
   )
 
+  const deleteBlog = async (id) => {
+    const blog = blogs.find((n) => n.id === id)
+    if (blog && window.confirm(`Remove blog ${blog.title}?`)) {
+      try {
+        await blogService.deleteById(id)
+        setBlogs(blogs.filter((b) => (b.id !== id)))
+        tempNotification(`Deleted blog: ${blog.title} by ${blog.author}.`, 'success')
+      } catch {
+        tempNotification('Error with deleting blog.', 'error')
+      }
+    }
+  }
+
   const blogList = () => {
     const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
+   //console.log(sortedBlogs[-1].title, sortedBlogs[-1].user.username)
     return (
     <div>
       <h2>blogs</h2>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          deleteFunction={deleteBlog} 
+          isUser={user && blog.user.username === user.username} />
       )}
     </div>
   )}
