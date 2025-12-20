@@ -94,7 +94,7 @@ const App = () => {
         .then((returnedData) => {
           setPersons(persons.filter((p) => (p.id !== returnedData.id)))
         })
-        .catch((error) => {
+        .catch(() => {
           tempNotification(`Error: ${person.name} does not exist in database.`, "error")
           setPersons(persons.filter((p) => (p.id !== person.id)))
         })

@@ -13,7 +13,7 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
     marginBottom: 5
   }
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
+  // const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
@@ -26,7 +26,7 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
       likes: blog.likes + 1
     }
     try {
-      const response = await blogService.update(blogObject)
+      await blogService.update(blogObject)
       setLikes(likes + 1)
     } catch {
       console.log(`error updating likes for blog: ${blog.title}`)
@@ -42,7 +42,7 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
         {<p>added by: {blog.user.name}</p> || false }
         {isUser && <button onClick={() => deleteFunction(blog.id)}>remove</button>}
       </div>
-    </div>  
+    </div>
   )
 }
 

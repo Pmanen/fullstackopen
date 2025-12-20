@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -31,13 +31,13 @@ const App = () => {
   }, [])
 
   const tempNotification = (message, type) => {
-    if (type === "success") {
+    if (type === 'success') {
       setSuccessMessage(message)
       setTimeout(() => {
         setSuccessMessage(null)
       }, 4000)
     }
-    else if (type === "error") {
+    else if (type === 'error') {
       setErrorMessage(message)
       setTimeout(() => {
         setErrorMessage(null)
@@ -47,7 +47,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem(
@@ -74,7 +74,7 @@ const App = () => {
     }
   }
 
-  const logout = (event) => {
+  const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     blogService.setToken(null)
     setUser(null)
@@ -114,24 +114,23 @@ const App = () => {
 
   const blogList = () => {
     const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
-   //console.log(sortedBlogs[-1].title, sortedBlogs[-1].user.username)
     return (
-    <div>
-      <h2>blogs</h2>
-      {sortedBlogs.map(blog =>
-        <Blog 
-          key={blog.id} 
-          blog={blog} 
-          deleteFunction={deleteBlog} 
-          isUser={user && blog.user.username === user.username} />
-      )}
-    </div>
-  )}
+      <div>
+        <h2>blogs</h2>
+        {sortedBlogs.map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            deleteFunction={deleteBlog}
+            isUser={user && blog.user.username === user.username} />
+        )}
+      </div>
+    )}
 
   return (
     <div>
-      <Notification message={successMessage} type={"success"} />
-      <Notification message={errorMessage} type={"error"} />
+      <Notification message={successMessage} type={'success'} />
+      <Notification message={errorMessage} type={'error'} />
       {user ? <p>{user.name} is logged in <button onClick={() => logout()}>logout</button></p> : loginForm()}
       {user && (
         <Togglable buttonLabel="create new blog" ref={createFormRef}>
