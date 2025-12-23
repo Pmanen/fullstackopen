@@ -30,4 +30,19 @@ describe('Blog app', () => {
       await expect(page.getByText('Logged in', { exact: true })).not.toBeVisible()
     })
   })
+
+  describe('when logged in', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, 'testificate9', '1234')
+    })
+
+    test.only('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByLabel('title:').fill ('a playwright blog')
+      await page.getByLabel('author:').fill ('Bill Shakespeare')
+      await page.getByLabel('url:').fill ('shakespeare.io')
+      await page.getByRole('button', { name: 'create' }).click()
+      await expect(page.locator('text=/a playwright blog/').first()).toBeVisible()
+    })
+  })
 })
