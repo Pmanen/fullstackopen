@@ -66,7 +66,8 @@ const App = () => {
   const createBlog = async (blogObject) => {
     try {
       const response = await blogService.create(blogObject)
-      setBlogs(blogs.concat({ ...response, user: user }))
+      console.log(`new blog: ${response.title} and ${response.user.username} and ${user.username}`)
+      setBlogs(blogs.concat(response))
       createFormRef.current.toggleVisibility()
       tempNotification(`Added a new blog: ${response.title} by ${response.author}.`, 'success')
     } catch {

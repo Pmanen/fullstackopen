@@ -21,16 +21,20 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
   }
 
   const like = async () => {
-    const blogObject = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-    try {
-      await blogService.update(blogObject)
-      setLikes(likes + 1)
-    } catch {
-      console.log(`error updating likes for blog: ${blog.title}`)
-    }
+    setLikes(prevLikes => {
+      const newLikes = prevLikes + 1
+
+      const blogObject = {
+        ...blog,
+        likes: newLikes
+      }
+
+      blogService.update(blogObject).catch(() => {
+        setLikes(prevLikes)
+        console.log(`error updating likes for blog: ${blog.title}`)
+      })
+      return newLikes
+    })
   }
 
   return (
