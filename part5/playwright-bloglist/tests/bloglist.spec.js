@@ -46,11 +46,18 @@ describe('Blog app', () => {
         await createBlog(page, 'a playwright blog', 'Bill Shakespeare', 'shakespeare.io')
       })
   
-      test.only('a blog can be liked', async ({ page }) => {
+      test('a blog can be liked', async ({ page }) => {
         await page.getByRole('button', { name: 'view' }).first().click()
         await expect(page.getByText('likes: 0')).toBeVisible()
         await page.getByRole('button', { name: 'like' }).click()
         await expect(page.getByText('likes: 1')).toBeVisible()
+      })
+
+      test('a blog can be deleted (if user is the owner)', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).first().click()
+        page.on('dialog', dialog => dialog.accept())
+        await page.getByRole('button', { name: 'remove' }).first().click()
+        await expect(page.getByRole('button', { name: 'view' })).not.toBeVisible()
       })
     })
   })
