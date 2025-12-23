@@ -59,6 +59,21 @@ describe('Blog app', () => {
         await page.getByRole('button', { name: 'remove' }).first().click()
         await expect(page.getByRole('button', { name: 'view' })).not.toBeVisible()
       })
+
+      test.only('Bob cannot see the remove button for Alice\'s blog', async ({ page, request }) => {
+        await request.post('/api/users', {
+          data: {
+            username: 'bob_test',
+            name: 'Bob Test',
+            password: '1234'
+          }
+        })
+        await page.getByRole('button', { name: 'logout'}).click()
+        await loginWith(page, 'bob_test', '1234')
+        await expect(page.locator('text=/a playwright blog/').first()).toBeVisible()
+        await page.getByRole('button', { name: 'view' }).first().click()
+        await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+      })
     })
   })
 })
