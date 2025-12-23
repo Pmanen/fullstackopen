@@ -1,3 +1,5 @@
+const { expect } = require('@playwright/test')
+
 const loginWith = async (page, username, password)  => {
   await page.getByLabel('username').fill(username)
   await page.getByLabel('password').fill(password)
@@ -12,4 +14,14 @@ const createBlog = async (page, title, author, url) => {
   await page.getByRole('button', { name: 'create' }).click()
 }
 
-export { loginWith, createBlog }
+const likeBlog = async (blogDiv, amount) => {
+  await blogDiv.getByRole('button', { name: 'view' }).click()
+  await expect(blogDiv.getByText('likes: 0')).toBeVisible()
+  
+  for (let i = 1; i <= amount; i++) {
+    await blogDiv.getByRole('button', { name: 'like' }).click()
+    await expect(blogDiv.getByText(`likes: ${i}`)).toBeVisible()
+  }
+}
+
+export { loginWith, createBlog, likeBlog }

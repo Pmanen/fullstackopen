@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, createBlog, likeBlog } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -41,7 +41,7 @@ describe('Blog app', () => {
       await expect(page.locator('text=/a playwright blog/').first()).toBeVisible()
     })
 
-    describe('and a note exists', () => {
+    describe('and a blog exists', () => {
       beforeEach(async ({ page }) => {
         await createBlog(page, 'a playwright blog', 'Bill Shakespeare', 'shakespeare.io')
       })
@@ -60,7 +60,7 @@ describe('Blog app', () => {
         await expect(page.getByRole('button', { name: 'view' })).not.toBeVisible()
       })
 
-      test.only('Bob cannot see the remove button for Alice\'s blog', async ({ page, request }) => {
+      test('Bob cannot see the remove button for Alice\'s blog', async ({ page, request }) => {
         await request.post('/api/users', {
           data: {
             username: 'bob_test',
@@ -73,6 +73,37 @@ describe('Blog app', () => {
         await expect(page.locator('text=/a playwright blog/').first()).toBeVisible()
         await page.getByRole('button', { name: 'view' }).first().click()
         await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+      })
+    })
+
+    describe('and several blogs exist', () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(page, 'four likes for this blog', 'Andrew', 'facebook.com')
+        await createBlog(page, 'two likes for this blog', 'Mike', 'facebook.com')
+        await createBlog(page, 'zero likes for this blog', 'Pippa', 'facebook.com')
+        await createBlog(page, 'three likes for this blog', 'Sarah', 'facebook.com')
+      })
+
+      test('a blog can be liked multiple times, even when multiple blogs are present', async ({ page }) => {
+        const twoLikesBlog = page.locator('text=/two likes for this blog/').last()
+        await likeBlog(twoLikesBlog, 2)
+        
+        const threeLikesBlog = page.locator('text=/three likes for this blog/').last()
+        await likeBlog(threeLikesBlog, 3)
+
+        const fourLikesBlog = page.locator('text=/four likes for this blog/').last()
+        await likeBlog(fourLikesBlog, 4)
+
+        await page.reload()
+
+        const blog0 = await page.locator('text=/zero likes for this blog/').boundingBox()
+        const blog2 = await page.locator('text=/two likes for this blog/').boundingBox()
+        const blog3 = await page.locator('text=/three likes for this blog/').boundingBox()
+        const blog4 = await page.locator('text=/four likes for this blog/').boundingBox()
+
+        expect(blog4.y).toBeLessThan(blog3.y)
+        expect(blog3.y).toBeLessThan(blog2.y)
+        expect(blog2.y).toBeLessThan(blog0.y)
       })
     })
   })
