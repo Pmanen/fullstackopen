@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { voteFor } from "../reducers/anecdoteReducer";
 import Filter from "./Filter";
+import { tempMessage } from "../reducers/messageReducer";
 
 const AnecdoteList = () => {
 
@@ -17,6 +18,7 @@ const AnecdoteList = () => {
 
   const vote = id => {
     dispatch(voteFor(id))
+    dispatch(tempMessage("Voted!"))
   }
 
   return (
