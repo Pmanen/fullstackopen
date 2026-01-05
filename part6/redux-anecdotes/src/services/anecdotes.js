@@ -10,6 +10,11 @@ const getAll = async () => {
   return await response.json()
 }
 
+const getAnecdoteById = async (id) => {
+  const response = await fetch(`${baseUrl}/${id}`)
+  return await response.json()
+}
+
 const createNew = async (content) => {
   const response = await fetch(baseUrl, {
     method: 'POST',
@@ -24,4 +29,20 @@ const createNew = async (content) => {
   return await response.json()
 }
 
-export default { getAll, createNew }
+const vote = async (id) => {
+  const anecdote = await getAnecdoteById(id)
+  const newAnecdote = {
+    ...anecdote,
+    votes: anecdote.votes + 1
+  }
+
+  const response = await fetch(`${baseUrl}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newAnecdote)
+  })
+  
+  return await response.json()
+}
+
+export default { getAll, createNew, vote }
