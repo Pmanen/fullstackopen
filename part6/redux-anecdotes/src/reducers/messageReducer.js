@@ -15,11 +15,11 @@ const messageSlice = createSlice({
   }
 })
 
-export const tempMessage = (message) => (dispatch) => {
+export const tempMessage = (message, seconds) => (dispatch) => {
   dispatch(messageChange(message))
   setTimeout(() => {
     dispatch(messageReset())
-  }, 5000)
+  }, seconds * 1000)
 }
 
 export const { messageChange, messageReset } = messageSlice.actions

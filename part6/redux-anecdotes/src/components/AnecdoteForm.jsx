@@ -9,7 +9,7 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.newAnecdote.value
     dispatch(appendAnecdote(content))
-    dispatch(tempMessage('New anecdote created!'))
+    dispatch(tempMessage('New anecdote created!', 5))
     event.target.newAnecdote.value = ''
   }
 

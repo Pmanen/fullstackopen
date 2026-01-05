@@ -18,7 +18,7 @@ const AnecdoteList = () => {
 
   const vote = id => {
     dispatch(processVote(id))
-    dispatch(tempMessage("Voted!"))
+    dispatch(tempMessage("Voted!", 1))
   }
 
   return (
