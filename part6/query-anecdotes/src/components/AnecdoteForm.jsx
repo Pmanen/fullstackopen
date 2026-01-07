@@ -12,6 +12,9 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
       tempMessage('New anecdote created!', 5)(messageDispatch)
+    },
+    onError: () => {
+      tempMessage('Error: anecdote must be at least 5 characters long', 5)(messageDispatch)
     }
   })
 
