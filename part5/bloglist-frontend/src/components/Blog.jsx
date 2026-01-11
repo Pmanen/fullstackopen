@@ -1,53 +1,56 @@
-import { useState } from 'react'
-import blogService from '../services/blogs'
+import { useState } from 'react';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog, deleteFunction, isUser }) => {
-  const [visible, setVisible] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
+  const [visible, setVisible] = useState(false);
+  const [likes, setLikes] = useState(blog.likes);
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
-  }
+    marginBottom: 5,
+  };
 
   // const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const showWhenVisible = { display: visible ? '' : 'none' };
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   const like = async () => {
     setLikes(prevLikes => {
-      const newLikes = prevLikes + 1
+      const newLikes = prevLikes + 1;
 
       const blogObject = {
         ...blog,
-        likes: newLikes
-      }
+        likes: newLikes,
+      };
 
       blogService.update(blogObject).catch(() => {
-        setLikes(prevLikes)
-        console.log(`error updating likes for blog: ${blog.title}`)
-      })
-      return newLikes
-    })
-  }
+        setLikes(prevLikes);
+        console.log(`error updating likes for blog: ${blog.title}`);
+      });
+      return newLikes;
+    });
+  };
 
   return (
     <div style={blogStyle}>
-      {blog.author}, "{blog.title}" <button onClick={toggleVisibility}>view</button>
+      {blog.author}, "{blog.title}"{' '}
+      <button onClick={toggleVisibility}>view</button>
       <div style={showWhenVisible}>
         <p style={{ fontStyle: 'italic' }}>{blog.url}</p>
         likes: {likes} <button onClick={like}>like</button>
-        {<p>added by: {blog.user.name}</p> || false }
-        {isUser && <button onClick={() => deleteFunction(blog.id)}>remove</button>}
+        {<p>added by: {blog.user.name}</p> || false}
+        {isUser && (
+          <button onClick={() => deleteFunction(blog.id)}>remove</button>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
