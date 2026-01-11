@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux'
+
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
+import { tempMessage } from './reducers/messageReducer';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
   const createFormRef = useRef();
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs));
@@ -28,20 +30,6 @@ const App = () => {
     }
   }, []);
 
-  const tempNotification = (message, type) => {
-    if (type === 'success') {
-      setSuccessMessage(message);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 4000);
-    } else if (type === 'error') {
-      setErrorMessage(message);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 4000);
-    }
-  };
-
   const handleLogin = async event => {
     event.preventDefault();
 
@@ -52,9 +40,9 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
-      tempNotification('Logged in', 'success');
+      dispatch(tempMessage('Logged in'))
     } catch {
-      tempNotification('Login failed: wrong credentials', 'error');
+      dispatch(tempMessage('Login failed: wrong credentials', "error"))
     }
   };
 
@@ -66,12 +54,11 @@ const App = () => {
       );
       setBlogs(blogs.concat(response));
       createFormRef.current.toggleVisibility();
-      tempNotification(
-        `Added a new blog: ${response.title} by ${response.author}.`,
-        'success'
-      );
+      dispatch(tempMessage(
+        `Added a new blog: ${response.title} by ${response.author}.`
+      ))
     } catch {
-      tempNotification('Invalid blog.', 'error');
+      dispatch(tempMessage('Invalid blog', 'error'))
     }
   };
 
@@ -79,7 +66,7 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     blogService.setToken(null);
     setUser(null);
-    tempNotification('Logged out.', 'success');
+    dispatch(tempMessage('Logged out'))
   };
 
   const loginForm = () => (
@@ -114,12 +101,11 @@ const App = () => {
       try {
         await blogService.deleteById(id);
         setBlogs(blogs.filter(b => b.id !== id));
-        tempNotification(
-          `Deleted blog: ${blog.title} by ${blog.author}.`,
-          'success'
-        );
+        dispatch(tempMessage(
+          `Deleted blog: ${blog.title} by ${blog.author}.`
+        ))
       } catch {
-        tempNotification('Error with deleting blog.', 'error');
+        dispatch(tempMessage('Error with deleting blog', 'error'))
       }
     }
   };
@@ -143,8 +129,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={successMessage} type={'success'} />
-      <Notification message={errorMessage} type={'error'} />
+      <Notification />
       {user ? (
         <p>
           {user.name} is logged in{' '}
