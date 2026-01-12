@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -9,11 +9,13 @@ import CreateForm from './components/CreateForm';
 import BlogList from './components/BlogList';
 import { tempMessage } from './reducers/messageReducer';
 import { initializeBlogs, appendBlog } from './reducers/blogReducer';
+import { resetUser, setUser } from './reducers/sessionReducer';
+import { __DO_NOT_USE__ActionTypes } from 'redux';
 
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
+  const user = useSelector(state => state.session.user)
   const createFormRef = useRef();
   const dispatch = useDispatch()
 
@@ -25,10 +27,10 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setUser(user))
       blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
 
   const handleLogin = async event => {
     event.preventDefault();
@@ -37,7 +39,7 @@ const App = () => {
       const user = await loginService.login({ username, password });
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user));
       blogService.setToken(user.token);
-      setUser(user);
+      dispatch(setUser(user));
       setUsername('');
       setPassword('');
       dispatch(tempMessage('Logged in'))
@@ -56,7 +58,7 @@ const App = () => {
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
     blogService.setToken(null);
-    setUser(null);
+    dispatch(resetUser())
     dispatch(tempMessage('Logged out'))
   };
 
@@ -102,7 +104,7 @@ const App = () => {
           <CreateForm onSubmit={handleCreate} />
         </Togglable>
       )}
-      {user && <BlogList user={user} />}
+      {user && <BlogList />}
     </div>
   );
 };
