@@ -11,7 +11,6 @@ import { tempMessage } from './reducers/messageReducer';
 import { initializeBlogs, appendBlog } from './reducers/blogReducer';
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -87,21 +86,6 @@ const App = () => {
     </form>
   );
 
-  const deleteBlog = async id => {
-    const blog = blogs.find(n => n.id === id);
-    if (blog && window.confirm(`Remove blog ${blog.title}?`)) {
-      try {
-        await blogService.deleteById(id);
-        setBlogs(blogs.filter(b => b.id !== id));
-        dispatch(tempMessage(
-          `Deleted blog: ${blog.title} by ${blog.author}.`
-        ))
-      } catch {
-        dispatch(tempMessage('Error with deleting blog', 'error'))
-      }
-    }
-  };
-
   return (
     <div>
       <Notification />
@@ -118,7 +102,7 @@ const App = () => {
           <CreateForm onSubmit={handleCreate} />
         </Togglable>
       )}
-      {user && <BlogList user={user} deleteBlog={deleteBlog} />}
+      {user && <BlogList user={user} />}
     </div>
   );
 };

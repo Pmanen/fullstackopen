@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import blogService from '../services/blogs';
+import { useDispatch } from 'react-redux'
+import { removeBlog, likeBlog } from '../reducers/blogReducer';
 
-const Blog = ({ blog, deleteFunction, isUser }) => {
+const Blog = ({ blog, isUser }) => {
   const [visible, setVisible] = useState(false);
-  const [likes, setLikes] = useState(blog.likes);
+  const dispatch = useDispatch()
 
   const blogStyle = {
     paddingTop: 10,
@@ -20,21 +21,14 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
     setVisible(!visible);
   };
 
-  const like = async () => {
-    setLikes(prevLikes => {
-      const newLikes = prevLikes + 1;
+  const handleRemove = async () => {
+    if (window.confirm(`Remove blog ${blog.title}?`)) {
+      dispatch(removeBlog(blog))
+    }
+  }
 
-      const blogObject = {
-        ...blog,
-        likes: newLikes,
-      };
-
-      blogService.update(blogObject).catch(() => {
-        setLikes(prevLikes);
-        console.log(`error updating likes for blog: ${blog.title}`);
-      });
-      return newLikes;
-    });
+  const handleLike = async () => {
+    dispatch(likeBlog(blog))
   };
 
   return (
@@ -43,10 +37,10 @@ const Blog = ({ blog, deleteFunction, isUser }) => {
       <button onClick={toggleVisibility}>view</button>
       <div style={showWhenVisible}>
         <p style={{ fontStyle: 'italic' }}>{blog.url}</p>
-        likes: {likes} <button onClick={like}>like</button>
+        likes: {blog.likes} <button onClick={handleLike}>like</button>
         {<p>added by: {blog.user.name}</p> || false}
         {isUser && (
-          <button onClick={() => deleteFunction(blog.id)}>remove</button>
+          <button onClick={handleRemove}>remove</button>
         )}
       </div>
     </div>
