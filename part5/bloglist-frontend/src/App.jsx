@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux'
 
-import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
+import BlogList from './components/BlogList';
 import { tempMessage } from './reducers/messageReducer';
+import { initializeBlogs, appendBlog } from './reducers/blogReducer';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,8 +19,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
-  }, []);
+    dispatch(initializeBlogs())
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
@@ -46,21 +47,12 @@ const App = () => {
     }
   };
 
-  const createBlog = async blogObject => {
-    try {
-      const response = await blogService.create(blogObject);
-      console.log(
-        `new blog: ${response.title} and ${response.user.username} and ${user.username}`
-      );
-      setBlogs(blogs.concat(response));
-      createFormRef.current.toggleVisibility();
-      dispatch(tempMessage(
-        `Added a new blog: ${response.title} by ${response.author}.`
-      ))
-    } catch {
-      dispatch(tempMessage('Invalid blog', 'error'))
+  const handleCreate = async (blog) => {
+    const result = await dispatch(appendBlog(blog))
+    if (result.success) {
+      createFormRef.current.toggleVisibility()
     }
-  };
+  }
 
   const logout = () => {
     window.localStorage.removeItem('loggedBlogappUser');
@@ -110,23 +102,6 @@ const App = () => {
     }
   };
 
-  const blogList = () => {
-    const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes);
-    return (
-      <div>
-        <h2>blogs</h2>
-        {sortedBlogs.map(blog => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            deleteFunction={deleteBlog}
-            isUser={user && blog.user.username === user.username}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div>
       <Notification />
@@ -140,10 +115,10 @@ const App = () => {
       )}
       {user && (
         <Togglable buttonLabel="create new blog" ref={createFormRef}>
-          <CreateForm createBlog={createBlog} />
+          <CreateForm onSubmit={handleCreate} />
         </Togglable>
       )}
-      {user && blogList()}
+      {user && <BlogList user={user} deleteBlog={deleteBlog} />}
     </div>
   );
 };

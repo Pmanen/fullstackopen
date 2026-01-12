@@ -1,18 +1,19 @@
 import { useState } from 'react';
 
-const CreateForm = ({ createBlog }) => {
+const CreateForm = ({ onSubmit }) => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
-  const handleCreate = async event => {
+  const handleCreate = async (event) => {
     event.preventDefault();
-    createBlog({
+
+    await onSubmit({
       title: title,
       author: author,
       url: url,
       likes: 0,
-    });
+    })
 
     setTitle('');
     setAuthor('');
