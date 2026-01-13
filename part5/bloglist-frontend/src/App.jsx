@@ -25,8 +25,6 @@ import { initializeUsers } from './reducers/userReducer';
 import { resetUser, setUser } from './reducers/sessionReducer';
 
 const App = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const user = useSelector(state => state.session.user)
   const users = useSelector(state => state.users)
   const blogs = useSelector(state => state.blogs)
@@ -103,6 +101,25 @@ const App = () => {
     </form>
   );
 
+  const padding = {
+    padding: 5
+  }
+
+  const NavMenu = () => (
+    <div>
+      <Link style={padding} to="/blogs">blogs</Link>
+      <Link style={padding} to="/users">users</Link>
+      {user ? (
+        <span>
+          {user.name} is logged in{' '}
+          <button onClick={() => logout()}>logout</button>
+        </span>
+      ) : (
+        loginForm()
+      )} 
+    </div>
+  )
+
   const match = useMatch('/users/:username')
   const userItem = match
     ? users.find (userItem => userItem.username === match.params.username)
@@ -115,16 +132,9 @@ const App = () => {
 
   return (
     <div>
+      <NavMenu />
       <h2>Blogs</h2>
       <Notification />
-      {user ? (
-        <p>
-          {user.name} is logged in{' '}
-          <button onClick={() => logout()}>logout</button>
-        </p>
-      ) : (
-        loginForm()
-      )}
       {user && (
               <Togglable buttonLabel="create new blog" ref={createFormRef}>
                 <CreateForm onSubmit={handleCreate} />

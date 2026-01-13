@@ -1,0 +1,7 @@
+POST http://localhost:3003/api/blogs/6964fbd2869c5e7b07a40917/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNlbSIsImlkIjoiNjk2NjcxNzg4NjljNWU3YjA3YTQwOWJiIiwiaWF0IjoxNzY4MzMzMTk1fQ._tcKWttUoFlzx8e31qxqKEoML_qRNhvcsC_3nz9Hs9s
+
+{
+    "comment": "this is a second comment"
+}

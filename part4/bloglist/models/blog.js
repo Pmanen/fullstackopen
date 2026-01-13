@@ -17,6 +17,16 @@ const blogSchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  comments: {
+    type: [{
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true
+      },
+      text: String
+    }],
+    default: []
   }
 })
 
@@ -25,6 +35,13 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+
+    if (returnedObject.comments && returnedObject.comments.length) {
+      returnedObject.comments = returnedObject.comments.map(comment => ({
+        id: comment._id.toString(),
+        text: comment.text
+      }))
+    }
   }
 })
 
