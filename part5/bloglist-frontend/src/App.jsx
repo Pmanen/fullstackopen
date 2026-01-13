@@ -18,6 +18,7 @@ import CreateForm from './components/CreateForm';
 import BlogList from './components/BlogList';
 import UserList from './components/UserList';
 import User from './components/User'
+import BlogPage from './components/BlogPage'
 import { tempMessage } from './reducers/messageReducer';
 import { initializeBlogs, appendBlog } from './reducers/blogReducer';
 import { initializeUsers } from './reducers/userReducer';
@@ -28,6 +29,7 @@ const App = () => {
   const [password, setPassword] = useState('');
   const user = useSelector(state => state.session.user)
   const users = useSelector(state => state.users)
+  const blogs = useSelector(state => state.blogs)
   const createFormRef = useRef();
   const dispatch = useDispatch()
 
@@ -103,7 +105,12 @@ const App = () => {
 
   const match = useMatch('/users/:username')
   const userItem = match
-    ? users.find (userItem => userItem.username == match.params.username)
+    ? users.find (userItem => userItem.username === match.params.username)
+    : null
+
+  const matchBlog = useMatch('/blogs/:id')
+  const blog = matchBlog
+    ? blogs.find (blog => blog.id === matchBlog.params.id)
     : null
 
   return (
@@ -125,9 +132,11 @@ const App = () => {
             )}
 
       <Routes>
+        <Route path="/" element={user ? <BlogList /> : null} />
         <Route path="/blogs" element={user ? <BlogList /> : null} />
         <Route path="/users" element={user ? <UserList /> : null} />
         <Route path="/users/:username" element={<User userItem={userItem} />} />
+        <Route path="/blogs/:id" element={<BlogPage blog={blog} />} />
       </Routes>
       
     </div>

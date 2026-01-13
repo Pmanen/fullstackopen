@@ -1,4 +1,6 @@
-const User = ( { userItem } ) => {
+import { Link } from 'react-router-dom'
+
+const User = ({ userItem }) => {
   if (!userItem) return null
 
   return (
@@ -8,7 +10,7 @@ const User = ( { userItem } ) => {
       {userItem.blogs.length ? (
         <ul>
           {userItem.blogs.map(blog => (
-            <li key={blog.id}>{blog.title}</li>
+            <li key={blog.id}><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></li>
         ))}
         </ul>
 
