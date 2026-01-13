@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  Routes,
+  Route,
+  Link,
+  Navigate,
+  useParams,
+  useNavigate,
+  useMatch,
+} from 'react-router-dom'
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -7,10 +16,11 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
 import BlogList from './components/BlogList';
+import UserList from './components/UserList';
 import { tempMessage } from './reducers/messageReducer';
 import { initializeBlogs, appendBlog } from './reducers/blogReducer';
+import { initializeUsers } from './reducers/userReducer';
 import { resetUser, setUser } from './reducers/sessionReducer';
-import { __DO_NOT_USE__ActionTypes } from 'redux';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -21,6 +31,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [dispatch]);
 
   useEffect(() => {
@@ -90,6 +101,7 @@ const App = () => {
 
   return (
     <div>
+      <h2>Blogs</h2>
       <Notification />
       {user ? (
         <p>
@@ -100,11 +112,16 @@ const App = () => {
         loginForm()
       )}
       {user && (
-        <Togglable buttonLabel="create new blog" ref={createFormRef}>
-          <CreateForm onSubmit={handleCreate} />
-        </Togglable>
-      )}
-      {user && <BlogList />}
+              <Togglable buttonLabel="create new blog" ref={createFormRef}>
+                <CreateForm onSubmit={handleCreate} />
+              </Togglable>
+            )}
+
+      <Routes>
+        <Route path="/blogs" element={user ? <BlogList /> : null} />
+        <Route path="/users" element={user ? <UserList /> : null} />
+      </Routes>
+      
     </div>
   );
 };
