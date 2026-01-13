@@ -17,6 +17,7 @@ import Togglable from './components/Togglable';
 import CreateForm from './components/CreateForm';
 import BlogList from './components/BlogList';
 import UserList from './components/UserList';
+import User from './components/User'
 import { tempMessage } from './reducers/messageReducer';
 import { initializeBlogs, appendBlog } from './reducers/blogReducer';
 import { initializeUsers } from './reducers/userReducer';
@@ -26,6 +27,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const user = useSelector(state => state.session.user)
+  const users = useSelector(state => state.users)
   const createFormRef = useRef();
   const dispatch = useDispatch()
 
@@ -99,6 +101,11 @@ const App = () => {
     </form>
   );
 
+  const match = useMatch('/users/:username')
+  const userItem = match
+    ? users.find (userItem => userItem.username == match.params.username)
+    : null
+
   return (
     <div>
       <h2>Blogs</h2>
@@ -120,6 +127,7 @@ const App = () => {
       <Routes>
         <Route path="/blogs" element={user ? <BlogList /> : null} />
         <Route path="/users" element={user ? <UserList /> : null} />
+        <Route path="/users/:username" element={<User userItem={userItem} />} />
       </Routes>
       
     </div>
