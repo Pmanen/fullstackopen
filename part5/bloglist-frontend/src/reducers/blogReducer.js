@@ -76,4 +76,15 @@ export const likeBlog = (blog) => {
   }
 }
 
+export const postComment = (blog, comment) => {
+  return async (dispatch) => {
+    try {
+      const responseObject = await blogService.postComment(blog, comment)
+      dispatch(updateBlog(responseObject))
+    } catch {
+      console.log(`error posting comment to blog ${blog.id}`)
+    }
+  }
+}
+
 export default blogSlice.reducer

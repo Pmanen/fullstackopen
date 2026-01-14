@@ -5,8 +5,6 @@ import {
   Route,
   Link,
   Navigate,
-  useParams,
-  useNavigate,
   useMatch,
 } from 'react-router-dom'
 
@@ -28,6 +26,8 @@ const App = () => {
   const user = useSelector(state => state.session.user)
   const users = useSelector(state => state.users)
   const blogs = useSelector(state => state.blogs)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const createFormRef = useRef();
   const dispatch = useDispatch()
 
@@ -105,21 +105,6 @@ const App = () => {
     padding: 5
   }
 
-  const NavMenu = () => (
-    <div>
-      <Link style={padding} to="/blogs">blogs</Link>
-      <Link style={padding} to="/users">users</Link>
-      {user ? (
-        <span>
-          {user.name} is logged in{' '}
-          <button onClick={() => logout()}>logout</button>
-        </span>
-      ) : (
-        loginForm()
-      )} 
-    </div>
-  )
-
   const match = useMatch('/users/:username')
   const userItem = match
     ? users.find (userItem => userItem.username === match.params.username)
@@ -132,7 +117,18 @@ const App = () => {
 
   return (
     <div>
-      <NavMenu />
+      <div>
+        <Link style={padding} to="/blogs">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+        {user ? (
+          <span>
+            {user.name} is logged in{' '}
+            <button onClick={() => logout()}>logout</button>
+          </span>
+        ) : (
+          loginForm()
+        )} 
+      </div>
       <h2>Blogs</h2>
       <Notification />
       {user && (
