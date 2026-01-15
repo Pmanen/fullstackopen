@@ -116,8 +116,9 @@ const App = () => {
     : null
 
   return (
-    <div>
+    <div className="container">
       <div>
+        <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/blogs">blogs</Link>
         <Link style={padding} to="/users">users</Link>
         {user ? (
@@ -131,14 +132,17 @@ const App = () => {
       </div>
       <h2>Blogs</h2>
       <Notification />
-      {user && (
+
+
+      <Routes>
+        <Route path="/" element={user ? <div>
+          <BlogList />
+          {user && (
               <Togglable buttonLabel="create new blog" ref={createFormRef}>
                 <CreateForm onSubmit={handleCreate} />
               </Togglable>
-            )}
-
-      <Routes>
-        <Route path="/" element={user ? <BlogList /> : null} />
+            )}      
+        </div>   : null} />
         <Route path="/blogs" element={user ? <BlogList /> : null} />
         <Route path="/users" element={user ? <UserList /> : null} />
         <Route path="/users/:username" element={<User userItem={userItem} />} />

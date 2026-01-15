@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { removeBlog, likeBlog } from '../reducers/blogReducer';
 import { Link } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
+import { BsChevronDown, BsChevronUp, BsTrash, BsHeart, BsHeartFill } from "react-icons/bs";
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false);
+  const [hasLiked, setHasLiked] = useState(false)
   const currentUser = useSelector(state => state.session.user.username)
   const isUser = currentUser === blog.user.username
   const dispatch = useDispatch()
@@ -32,18 +35,19 @@ const Blog = ({ blog }) => {
 
   const handleLike = async () => {
     dispatch(likeBlog(blog))
+    setHasLiked(true)
   };
 
   return (
     <div style={blogStyle}>
       <Link to={`/blogs/${blog.id}`}>{blog.author}, "{blog.title}"</Link>{' '}
-      <button onClick={toggleVisibility}>view</button>
+      <Button onClick={toggleVisibility} variant="light" size="sm">{visible ? <BsChevronUp/> : <BsChevronDown/>}</Button>
       <div style={showWhenVisible}>
         <p style={{ fontStyle: 'italic' }}>{blog.url}</p>
-        likes: {blog.likes} <button onClick={handleLike}>like</button>
+        <span><Button variant="light" onClick={handleLike}>{hasLiked ? <BsHeartFill/> : <BsHeart/>}</Button>{blog.likes} </span>
         {<p>added by: {blog.user.name}</p> || false}
         {isUser && (
-          <button onClick={handleRemove}>remove</button>
+          <Button onClick={handleRemove} variant="light" size="m"><BsTrash color="red"/></Button>
         )}
       </div>
     </div>

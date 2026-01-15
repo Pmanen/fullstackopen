@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Form, Button } from 'react-bootstrap'
 import { postComment } from '../reducers/blogReducer'
 
 const BlogPage = ({ blog }) => {
@@ -22,10 +23,10 @@ const BlogPage = ({ blog }) => {
       <p>{blog.likes} likes</p>
       <p>added by {blog.user.name}</p>
       <h3>Comments</h3>
-      <form onSubmit={handleComment}>
-        <input type="text" value={comment} onChange={({ target }) => setComment(target.value)}/>
-        <button type="submit">add comment</button>
-      </form>
+      <Form onSubmit={handleComment}>
+        <Form.Control type="text" value={comment} onChange={({ target }) => setComment(target.value)}/>
+        <Button variant="primary" type="submit">add comment</Button>
+      </Form>
       {blog.comments.length ? (
         <ul>
           {blog.comments.map(comment => (
