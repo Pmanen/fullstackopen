@@ -56,14 +56,16 @@ const parseCalcArguments = (args: string[]): { hours: number[], target: number }
   }
 }
 
-try {
-  const { hours, target } = parseCalcArguments(process.argv);
-  const result = calculateExercises(hours, target);
-  console.log(result)
-} catch (error: unknown) {
-  let errorMessage = 'Unknown error'
-  if (error instanceof Error) {
-    errorMessage = `Error: ` + error.message
+if (require.main === module) {
+  try {
+    const { hours, target } = parseCalcArguments(process.argv);
+    const result = calculateExercises(hours, target);
+    console.log(result)
+  } catch (error: unknown) {
+    let errorMessage = 'Unknown error'
+    if (error instanceof Error) {
+      errorMessage = `Error: ` + error.message
+    }
+    console.log(errorMessage)
   }
-  console.log(errorMessage)
 }

@@ -1,5 +1,3 @@
-type BMI = 'Underweight' | 'Normal range' | 'Overweight' | 'Obese';
-
 const calculateBmi = (height: number, weight: number) : BMI => {
   const result = weight / ((height / 100.0) ** 2);
   
@@ -9,9 +7,6 @@ const calculateBmi = (height: number, weight: number) : BMI => {
   else if (result < 100) return 'Obese';
   else throw new Error('Calculation error: BMI is higher than 100')
 }
-
-//console.log(calculateBmi(180, 74))
-//console.log(calculateBmi(179, 64))
 
 const parseArguments = (args: string[]): { height: number, weight: number } => {
   if (args.length < 4) throw new Error('Not enought arguments');
@@ -41,3 +36,6 @@ try {
   }
   console.log(errorMessage);
 }
+
+export type BMI = 'Underweight' | 'Normal range' | 'Overweight' | 'Obese';
+export default calculateBmi
