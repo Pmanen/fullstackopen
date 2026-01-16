@@ -2,3 +2,4 @@ part*/theory/*
 .DS_Store
 .env
 part*/playwright-testing/
+node_modules/
