@@ -25,16 +25,18 @@ const parseArguments = (args: string[]): { height: number, weight: number } => {
   }
 };
 
-try {
-  const { height, weight } = parseArguments(process.argv);
-  const result = calculateBmi(height, weight);
-  console.log(result);
-} catch (error: unknown) {
-  let errorMessage = 'Unknown error';
-  if (error instanceof Error) {
-    errorMessage = `Error: ` + error.message;
+if (require.main === module) {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    const result = calculateBmi(height, weight);
+    console.log(result);
+  } catch (error: unknown) {
+    let errorMessage = 'Unknown error';
+    if (error instanceof Error) {
+      errorMessage = `Error: ` + error.message;
+    }
+    console.log(errorMessage);
   }
-  console.log(errorMessage);
 }
 
 export type BMI = 'Underweight' | 'Normal range' | 'Overweight' | 'Obese';
