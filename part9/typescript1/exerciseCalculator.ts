@@ -29,7 +29,7 @@ const calculateExercises = (hours: number[], target: number): Result => {
   }
   else {
     rating = 3;
-    ratingDescription = "good results"
+    ratingDescription = "good results";
   }
 
   return {
@@ -40,8 +40,8 @@ const calculateExercises = (hours: number[], target: number): Result => {
     ratingDescription,
     target,
     average
-  }
-}
+  };
+};
 
 const parseCalcArguments = (args: string[]): { hours: number[], target: number } => {
   if (args.length < 4) throw new Error('Not enough arguments');
@@ -53,19 +53,19 @@ const parseCalcArguments = (args: string[]): { hours: number[], target: number }
   return {
     hours,
     target
-  }
-}
+  };
+};
 
 if (require.main === module) {
   try {
     const { hours, target } = parseCalcArguments(process.argv);
     const result = calculateExercises(hours, target);
-    console.log(result)
+    console.log(result);
   } catch (error: unknown) {
-    let errorMessage = 'Unknown error'
+    let errorMessage = 'Unknown error';
     if (error instanceof Error) {
-      errorMessage = `Error: ` + error.message
+      errorMessage = `Error: ` + error.message;
     }
-    console.log(errorMessage)
+    console.log(errorMessage);
   }
 }
