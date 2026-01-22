@@ -1,0 +1,17 @@
+POST http://localhost:3001/api/patients
+Content-Type: application/json
+
+{
+    "name": "Testificate",
+    "dateOfBirth": "2025-01-22",
+    "ssn": "25.01.22-4173",
+    "gender": "female",
+    "occupation": "construction worker"
+}
+
+###
+
+GET http://localhost:3003/api/users
+
+###
+GET http://localhost:3003/api/blogs
