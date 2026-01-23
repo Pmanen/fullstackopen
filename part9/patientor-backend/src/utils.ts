@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { NewPatient, Gender } from './types';
 
 export const toNewPatient = (object: unknown): NewPatient => {
@@ -52,3 +53,11 @@ const isDate = (date: string): boolean => {
 const isGender = (param: string): param is Gender => {
   return Object.values(Gender).map(v => v.toString()).includes(param);
 };
+
+export const NewPatientSchema = z.object({
+  name: z.string(),
+  dateOfBirth: z.string().date(),
+  ssn: z.string(),
+  gender: z.enum(Gender),
+  occupation: z.string()
+});
