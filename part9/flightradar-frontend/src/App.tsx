@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { type NewDiaryEntry, type NonSensitiveDiaryEntry, Weather, Visibility } from './types';
 import diaryService from './services/diaries'
+import Notification from './components/Notification';
 
 const App = () => {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
@@ -8,6 +10,7 @@ const App = () => {
   const [visibility, setVisibility] = useState('');
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     diaryService.getAll().then(diaries =>
@@ -40,25 +43,46 @@ const App = () => {
   const handleCreate = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
-    const newEntry: NewDiaryEntry = {
-      comment: comment,
-      visibility: toVisibility(visibility),
-      weather: toWeather(weather),
-      date: date
-    }
+    try {
+        const newEntry: NewDiaryEntry = {
+        comment: comment,
+        visibility: toVisibility(visibility),
+        weather: toWeather(weather),
+        date: date
+      }
 
-    const response: NonSensitiveDiaryEntry = await diaryService.create(newEntry);
-    setDiaries(diaries.concat(response));
-    setDate('');
-    setVisibility('');
-    setWeather('');
-    setComment('');
+      const response: NonSensitiveDiaryEntry = await diaryService.create(newEntry);
+      setDiaries(diaries.concat(response));
+      setDate('');
+      setVisibility('');
+      setWeather('');
+      setComment(''); 
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(error.status);
+        console.error(error.response);
+        setMessage(
+          `${error.response?.data}`
+        );
+        setTimeout(() => {
+          setMessage("")
+        }, 5000);
+      } else if (error instanceof Error) {
+        setMessage(`Error: ${error.message}`);
+        setTimeout(() => {
+          setMessage("")
+        }, 5000);
+      } else {
+        console.log(error);
+      }
+    }
   }
 
   return (
     <div>
      <div>
         <h2>Add new entry</h2>
+        <Notification message={message} />
         <form onSubmit={handleCreate}>
           <div>
             <label>
