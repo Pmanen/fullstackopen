@@ -88,31 +88,102 @@ const App = () => {
             <label>
               date:
               <input
-                type="text"
+                type="date"
                 value={date}
                 onChange={({ target }) => setDate(target.value)}
               />
             </label>
           </div>
           <div>
-            <label>
-              visibility:
+            <fieldset>
+              <legend>visibility:</legend>
+             <label>
               <input
-                type="text"
-                value={visibility}
+                type="radio"
+                value="great"
+                checked={visibility === "great"}
                 onChange={({ target }) => setVisibility(target.value)}
               />
+              great
+            </label> 
+            <label>
+              <input
+                type="radio"
+                value="good"
+                checked={visibility === "good"}
+                onChange={({ target }) => setVisibility(target.value)}
+              />
+              good
             </label>
+            <label>
+              <input
+                type="radio"
+                value="ok"
+                checked={visibility === "ok"}
+                onChange={({ target }) => setVisibility(target.value)}
+              />
+              ok
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="poor"
+                checked={visibility === "poor"}
+                onChange={({ target }) => setVisibility(target.value)}
+              />
+              poor
+            </label>
+            </fieldset>
           </div>
           <div>
-            <label>
-              weather:
-              <input
-                type="text"
-                value={weather}
-                onChange={({ target }) => setWeather(target.value)}
-              />
-            </label>
+            <fieldset>
+              <legend>weather:</legend>
+              <label>
+                <input
+                  type="radio"
+                  value="sunny"
+                  checked={weather === "sunny"}
+                  onChange={({ target }) => setWeather(target.value)}
+                />
+                sunny
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="rainy"
+                  checked={weather === "rainy"}
+                  onChange={({ target }) => setWeather(target.value)}
+                />
+                rainy
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="cloudy"
+                  checked={weather === "cloudy"}
+                  onChange={({ target }) => setWeather(target.value)}
+                />
+                cloudy
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="stormy"
+                  checked={weather === "stormy"}
+                  onChange={({ target }) => setWeather(target.value)}
+                />
+                stormy
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="windy"
+                  checked={weather === "windy"}
+                  onChange={({ target }) => setWeather(target.value)}
+                />
+                windy
+              </label>
+            </fieldset>
           </div>
           <div>
             <label>
